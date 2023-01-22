@@ -3,6 +3,10 @@ import express from "express";
 import helmet from "helmet";
 import bodyParser from "body-parser";
 import cors from "cors";
+import { errorHandler } from "./middleware/errorException";
+import { logMiddleware } from "./middleware/logMiddleware";
+
+import testRouter from "./routes/testRouter";
 
 const app = express();
 app.use(helmet());
@@ -23,14 +27,20 @@ app.use(bodyParser.json());
 
 const port = process.env.PORT || 4242; // port番号を指定
 
-app.get("/helloworld", (_req, res) => {
-  res.status(200).send({ message: "hello, world" });
-});
+// ログ用ミドルウェア
+app.use(logMiddleware);
+
+// 個別ルーティング設定
+app.use("/test", testRouter);
 
 // いずれのルーティングにもマッチしない(==NOT FOUND)
 app.use((_req, res) => {
   res.status(404).send({ message: "not Found" });
 });
+
+// errorに関するmiddlewareは最後に記述する必要がある
+// error用ミドルウェア
+app.use(errorHandler);
 
 //サーバ起動
 app.listen(port);
