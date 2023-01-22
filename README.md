@@ -28,7 +28,6 @@
 
 ## 処理部分の取り回し
 - [postのデータが情報がちゃんと来ているか判定する部分](https://nishinatoshiharu.com/object-type-guard/)
-- 
 
 
 ## 参考資料（これからやりたいこと・コマンド内で調べたこと）
@@ -45,6 +44,11 @@
 # 開発ライブラリ
 yarn add express helmet cors mongodb mongoose body-parser moment
 yarn add -D typescript @types/node @types/express @types/helmet @types/cors @types/mongoose ts-node
+# tsconfig 作成
+npx tsc --init
+# .eslintrc.js 作成
+npx eslint --init
+
 
 
 # 効率上げる系
