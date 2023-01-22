@@ -11,7 +11,7 @@ const testRouter = express.Router();
 
 // 専用のミドルウェアを用意して、処理前に情報があるかどうかをチェックすることができる
 // 今回はメソッドが許可されているかをチェックする
-testRouter.use("/", (req, res, next) => {
+testRouter.use("/", (req, _res, next) => {
   const methodName = req.method;
   switch (methodName) {
     case "GET":
