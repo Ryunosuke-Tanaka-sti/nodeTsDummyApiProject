@@ -3,7 +3,7 @@ import helmet from "helmet";
 import cors from "cors";
 import { TestService } from "../service/TestService";
 import { badRequestException } from "../middleware/errorException";
-import { testType } from "../types/testType";
+import { isTestType, testType } from "../types/testType";
 const app = express();
 app.use(helmet());
 app.use(cors());
@@ -26,10 +26,6 @@ testRouter.use("/", (req, res, next) => {
       break;
   }
 });
-
-// ここのベストプラクティスを知りたい
-const isTestType = (data: testType): data is testType =>
-  "id" in data && "text" in data && "done" in data;
 
 testRouter.get("/", (_req, res) => {
   const service = new TestService();
