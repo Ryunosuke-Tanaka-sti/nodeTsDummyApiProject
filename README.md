@@ -28,6 +28,7 @@
 
 ## 処理部分の取り回し
 - [postのデータが情報がちゃんと来ているか判定する部分](https://nishinatoshiharu.com/object-type-guard/)
+- [Omit処理](https://typescriptbook.jp/reference/type-reuse/utility-types/omit)
 
 
 ## 参考資料（これからやりたいこと・コマンド内で調べたこと）
