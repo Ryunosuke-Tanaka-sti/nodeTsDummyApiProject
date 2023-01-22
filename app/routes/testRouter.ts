@@ -1,17 +1,16 @@
 import express from "express";
-import helmet from "helmet";
-import cors from "cors";
 import { TestService } from "../service/TestService";
-import { badRequestException } from "../middleware/errorException";
-import { isTestType, testType } from "../types/testType";
-const app = express();
-app.use(helmet());
-app.use(cors());
+import {
+  badRequestException,
+  notAllowedMethodExveption,
+} from "../middleware/errorException";
+import { isTestType, isTestTypeOmitId, testType } from "../types/testType";
+
 // ルーティングする
 const testRouter = express.Router();
 
-// 専用のミドルウェアを用意して、処理前に情報があるかどうかをチェックする
-// ここでエラーハンドリングを行い、ルータの部分では処理のみを行う
+// 専用のミドルウェアを用意して、処理前に情報があるかどうかをチェックすることができる
+// 今回はメソッドが許可されているかをチェックする
 testRouter.use("/", (req, res, next) => {
   const methodName = req.method;
   switch (methodName) {
@@ -22,63 +21,93 @@ testRouter.use("/", (req, res, next) => {
       next();
       break;
     default:
-      res.status(405).send({ message: "not allow method" });
-      break;
+      // next(notAllowedMethodExveption());
+      throw notAllowedMethodExveption();
   }
 });
 
-testRouter.get("/", (_req, res) => {
+testRouter.get("/", (_req, res, next) => {
   const service = new TestService();
   service
-    .test()
-    .then((result) => {
-      res.status(200).send({ result: result.test });
+    .getAllData()
+    .then((value) => {
+      return res.status(200).send({ data: value });
     })
     .catch(() => {
-      // error周りの処理
-      console.log("fin");
+      // console.log("error", value);
+      next(badRequestException("何らかの問題が生じました"));
     });
 });
-testRouter.get("/:id", (req, res) => {
+testRouter.get("/:id", (req, res, next) => {
   const id = req.params.id;
   // idがないと弾く・文字列が来てもはじく処理をセキュリティ的に追加
   if (!id || !Number(id)) throw badRequestException("idが必要です");
 
   const service = new TestService();
   service
-    .test()
-    .then((result) => res.status(200).send({ result: result.test }))
+    .getData(Number(id))
+    .then((value) => {
+      if (!value) return res.status(200).send({ data: {} });
+      return res.status(200).send({ data: value });
+    })
     .catch(() => {
-      console.log("fin");
+      // console.log("error", value);
+      next(badRequestException("何らかの問題が生じました"));
     });
 });
 
-testRouter.post("/", (req, res) => {
+testRouter.post("/", (req, res, next) => {
+  const postData: testType = req.body as testType;
+  // 型判定
+  if (!isTestTypeOmitId(postData))
+    throw badRequestException("パラメータが不足しています");
+
+  const service = new TestService();
+  service
+    .createData(postData)
+    .then((value) => {
+      if (!value) return res.status(200).send({ data: {} });
+      return res.status(200).send({ data: value });
+    })
+    .catch(() => {
+      // console.log("error", value);
+      next(badRequestException("一致するid情報がありません"));
+    });
+});
+
+// 204の場合ではデータが返らないことが前提である
+testRouter.put("/", (req, res, next) => {
   const postData: testType = req.body as testType;
   // 型判定
   if (!isTestType(postData))
     throw badRequestException("パラメータが不足しています");
 
-  res.status(201).send({ result: "ok" });
+  const service = new TestService();
+  service
+    .editData(postData)
+    .then(() => {
+      return res.status(204).end();
+    })
+    .catch(() => {
+      next(badRequestException("一致するid情報がありません"));
+    });
 });
 
-// 204の場合ではデータが返らないことが前提である
-testRouter.put("/", (req, res) => {
+testRouter.delete("/", (req, res, next) => {
   const id: number = (req.body as { id: number }).id;
   if (typeof id != "number")
     throw badRequestException("許可されているのは数字のみです");
-
-  res.status(204).end();
-});
-
-testRouter.delete("/", (req, res) => {
-  const id: number = (req.body as { id: number }).id;
-  if (typeof id != "number")
-    throw badRequestException("許可されているのは数字のみです");
-
-  res.status(204).end();
+  const service = new TestService();
+  service
+    .deleteData(id)
+    .then(() => {
+      return res.status(204).end();
+    })
+    .catch(() => {
+      // console.error(value);
+      next(badRequestException("一致するid情報がありません"));
+    });
 });
 
 //routerをモジュールとして扱う準備
-// module.exports = router;
 export default testRouter;

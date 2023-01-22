@@ -6,3 +6,6 @@ export type testType = {
 
 export const isTestType = (data: testType): data is testType =>
   "id" in data && "text" in data && "done" in data;
+
+export const isTestTypeOmitId = (data: testType): data is testType =>
+  "text" in data && "done" in data;

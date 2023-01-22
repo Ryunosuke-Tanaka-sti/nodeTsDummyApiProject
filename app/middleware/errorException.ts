@@ -22,6 +22,12 @@ export const forbiddenException = (
   return new HttpException(403, message);
 };
 
+export const notAllowedMethodExveption = (
+  message = "405 not allowed method"
+): HttpException => {
+  return new HttpException(405, message);
+};
+
 export const errorHandler = (
   err: HttpException,
   _req: Request,
