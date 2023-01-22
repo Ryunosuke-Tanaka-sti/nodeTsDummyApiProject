@@ -10,7 +10,9 @@ import testRouter from "./routes/testRouter";
 
 const app = express();
 app.use(helmet());
+
 // ここはデプロイ先の環境変数から取得するというムーブいいのでは？
+// CORS設定
 app.use(
   cors({
     origin: "http://localhost:3000",
@@ -37,7 +39,7 @@ app.use((_req, res) => {
 });
 
 // errorに関するmiddlewareは最後に記述する必要がある
-// error要ミドルウェア
+// error用ミドルウェア
 app.use(errorHandler);
 
 //サーバ起動
