@@ -8,11 +8,11 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 // ルーティングする
-const router = express.Router();
+const testRouter = express.Router();
 
 // 専用のミドルウェアを用意して、処理前に情報があるかどうかをチェックする
 // ここでエラーハンドリングを行い、ルータの部分では処理のみを行う
-router.use("/", (req, res, next) => {
+testRouter.use("/", (req, res, next) => {
   const methodName = req.method;
   switch (methodName) {
     case "GET":
@@ -31,7 +31,7 @@ router.use("/", (req, res, next) => {
 const isTestType = (data: testType): data is testType =>
   "id" in data && "text" in data && "done" in data;
 
-router.get("/", (_req, res) => {
+testRouter.get("/", (_req, res) => {
   const service = new TestService();
   service
     .test()
@@ -43,7 +43,7 @@ router.get("/", (_req, res) => {
       console.log("fin");
     });
 });
-router.get("/:id", (req, res) => {
+testRouter.get("/:id", (req, res) => {
   const id = req.params.id;
   // idがないと弾く・文字列が来てもはじく処理をセキュリティ的に追加
   if (!id || !Number(id)) throw badRequestException("idが必要です");
@@ -57,7 +57,7 @@ router.get("/:id", (req, res) => {
     });
 });
 
-router.post("/", (req, res) => {
+testRouter.post("/", (req, res) => {
   const postData: testType = req.body as testType;
   // 型判定
   if (!isTestType(postData))
@@ -67,7 +67,7 @@ router.post("/", (req, res) => {
 });
 
 // 204の場合ではデータが返らないことが前提である
-router.put("/", (req, res) => {
+testRouter.put("/", (req, res) => {
   const id: number = (req.body as { id: number }).id;
   if (typeof id != "number")
     throw badRequestException("許可されているのは数字のみです");
@@ -75,7 +75,7 @@ router.put("/", (req, res) => {
   res.status(204).end();
 });
 
-router.delete("/", (req, res) => {
+testRouter.delete("/", (req, res) => {
   const id: number = (req.body as { id: number }).id;
   if (typeof id != "number")
     throw badRequestException("許可されているのは数字のみです");
@@ -84,4 +84,5 @@ router.delete("/", (req, res) => {
 });
 
 //routerをモジュールとして扱う準備
-module.exports = router;
+// module.exports = router;
+export default testRouter;

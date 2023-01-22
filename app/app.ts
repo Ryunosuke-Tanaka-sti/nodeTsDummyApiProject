@@ -1,9 +1,13 @@
 // ライブラリ読み込み
 import express from "express";
 import helmet from "helmet";
+import bodyParser from "body-parser";
 import cors from "cors";
 import { errorHandler } from "./middleware/errorException";
 import { logMiddleware } from "./middleware/logMiddleware";
+
+import testRouter from "./routes/testRouter";
+
 const app = express();
 app.use(helmet());
 // ここはデプロイ先の環境変数から取得するというムーブいいのでは？
@@ -16,7 +20,6 @@ app.use(
 );
 
 //body-parserの設定
-const bodyParser = require("body-parser");
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
@@ -26,7 +29,6 @@ const port = process.env.PORT || 4242; // port番号を指定
 app.use(logMiddleware);
 
 // 個別ルーティング設定
-const testRouter = require("./routes/testRouter");
 app.use("/test", testRouter);
 
 // いずれのルーティングにもマッチしない(==NOT FOUND)
@@ -40,4 +42,4 @@ app.use(errorHandler);
 
 //サーバ起動
 app.listen(port);
-console.log("listen on port " + port);
+console.log("listen on port ", port);
