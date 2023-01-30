@@ -30,6 +30,11 @@
 - [postのデータが情報がちゃんと来ているか判定する部分](https://nishinatoshiharu.com/object-type-guard/)
 - [Omit処理](https://typescriptbook.jp/reference/type-reuse/utility-types/omit)
 
+## Swagger の構築
+- [Swagger構築](https://blog.mamansoft.net/2019/08/12/develop-express-with-typescript-cool-environment/)
+- [Apiのルート部分を設定する方法](https://github.com/Surnet/swagger-jsdoc/issues/150)
+- [Swagger Editorのローカル](https://qiita.com/miriwo/items/93a845f03435fbbce3bd)
+- [Dockerで入れる方](https://swagger.io/docs/open-source-tools/swagger-editor/)
 
 ## 参考資料（これからやりたいこと・コマンド内で調べたこと）
 

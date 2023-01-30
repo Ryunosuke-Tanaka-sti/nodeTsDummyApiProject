@@ -1,8 +1,11 @@
 // ライブラリ読み込み
-import express from "express";
-import helmet from "helmet";
 import bodyParser from "body-parser";
 import cors from "cors";
+import express from "express";
+import helmet from "helmet";
+import swaggerJSDoc from "swagger-jsdoc";
+import swaggerUi from "swagger-ui-express";
+
 import { errorHandler } from "./middleware/errorException";
 import { logMiddleware } from "./middleware/logMiddleware";
 
@@ -20,6 +23,27 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
+
+// Swaggerの構築
+const options: swaggerJSDoc.Options = {
+  swaggerDefinition: {
+    openapi: "3.0.0",
+    // swagger: "2.0",
+    info: {
+      title: "Express Typescripts",
+      version: "1.0.0",
+    },
+    host: "localhost:4242",
+    schemes: ["http", "https"],
+    consumes: ["application/json"],
+    produces: ["application/json", "text/plain"],
+    servers: [
+      { url: "http://localhost:4242/", description: "Development server" },
+    ],
+  },
+  apis: ["./app/routes/*.ts", "./app/others/*.yaml"],
+};
+app.use("/spec", swaggerUi.serve, swaggerUi.setup(swaggerJSDoc(options)));
 
 //body-parserの設定
 app.use(bodyParser.urlencoded({ extended: true }));

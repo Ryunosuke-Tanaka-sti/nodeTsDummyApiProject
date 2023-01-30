@@ -1,9 +1,9 @@
 import express from "express";
-import { TestService } from "../service/TestService";
 import {
   badRequestException,
   notAllowedMethodExveption,
 } from "../middleware/errorException";
+import { TestService } from "../service/TestService";
 import { isTestType, isTestTypeOmitId, testType } from "../types/testType";
 
 // ルーティングする
@@ -31,13 +31,14 @@ testRouter.get("/", (_req, res, next) => {
   service
     .getAllData()
     .then((value) => {
-      return res.status(200).send({ data: value });
+      return res.status(200).send({ testDataBase: value });
     })
     .catch(() => {
       // console.log("error", value);
       next(badRequestException("何らかの問題が生じました"));
     });
 });
+
 testRouter.get("/:id", (req, res, next) => {
   const id = req.params.id;
   // idがないと弾く・文字列が来てもはじく処理をセキュリティ的に追加
@@ -47,8 +48,8 @@ testRouter.get("/:id", (req, res, next) => {
   service
     .getData(Number(id))
     .then((value) => {
-      if (!value) return res.status(200).send({ data: {} });
-      return res.status(200).send({ data: value });
+      if (!value) return res.status(200).send({});
+      return res.status(200).send({ testData: value });
     })
     .catch(() => {
       // console.log("error", value);
@@ -66,8 +67,8 @@ testRouter.post("/", (req, res, next) => {
   service
     .createData(postData)
     .then((value) => {
-      if (!value) return res.status(200).send({ data: {} });
-      return res.status(200).send({ data: value });
+      if (!value) return res.status(200).send({});
+      return res.status(200).send({ value });
     })
     .catch(() => {
       // console.log("error", value);
