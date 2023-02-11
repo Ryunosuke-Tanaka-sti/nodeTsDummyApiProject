@@ -18,9 +18,9 @@ app.use(helmet());
 // CORS設定
 app.use(
   cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    optionsSuccessStatus: 200,
+    // origin: "http://localhost:3000",
+    // credentials: true,
+    // optionsSuccessStatus: 200,
   })
 );
 
