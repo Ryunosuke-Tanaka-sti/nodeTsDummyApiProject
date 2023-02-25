@@ -13,13 +13,7 @@ app.use(helmet());
 
 // ここはデプロイ先の環境変数から取得するというムーブいいのでは？
 // CORS設定
-app.use(
-  cors({
-    origin: "http://localhost:3000",
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
-);
+app.use(cors());
 
 //body-parserの設定
 app.use(bodyParser.urlencoded({ extended: true }));
