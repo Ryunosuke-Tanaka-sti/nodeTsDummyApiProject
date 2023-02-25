@@ -1,9 +1,9 @@
 import express from "express";
-import { TestService } from "../service/TestService";
 import {
   badRequestException,
   notAllowedMethodExveption,
 } from "../middleware/errorException";
+import { TestService } from "../service/TestService";
 import { isTestType, isTestTypeOmitId, testType } from "../types/testType";
 
 // ルーティングする
@@ -21,8 +21,7 @@ testRouter.use("/", (req, _res, next) => {
       next();
       break;
     default:
-      // next(notAllowedMethodExveption());
-      throw notAllowedMethodExveption();
+      next(notAllowedMethodExveption());
   }
 });
 

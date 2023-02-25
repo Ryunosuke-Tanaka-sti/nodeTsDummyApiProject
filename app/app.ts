@@ -1,9 +1,9 @@
 // ライブラリ読み込み
-import express from "express";
-import helmet from "helmet";
 import bodyParser from "body-parser";
 import cors from "cors";
-import { errorHandler } from "./middleware/errorException";
+import express from "express";
+import helmet from "helmet";
+import { errorHandler, notFoundException } from "./middleware/errorException";
 import { logMiddleware } from "./middleware/logMiddleware";
 
 import testRouter from "./routes/testRouter";
@@ -34,8 +34,8 @@ app.use(logMiddleware);
 app.use("/test", testRouter);
 
 // いずれのルーティングにもマッチしない(==NOT FOUND)
-app.use((_req, res) => {
-  res.status(404).send({ message: "not Found" });
+app.use((_req, _res, next) => {
+  next(notFoundException());
 });
 
 // errorに関するmiddlewareは最後に記述する必要がある

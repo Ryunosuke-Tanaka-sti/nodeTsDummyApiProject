@@ -16,6 +16,10 @@ export const badRequestException = (
   return new HttpException(400, message);
 };
 
+export const notFoundException = (message = "404 Not Found"): HttpException => {
+  return new HttpException(404, message);
+};
+
 export const forbiddenException = (
   message = "403 Forbidden"
 ): HttpException => {
