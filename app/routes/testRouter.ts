@@ -40,7 +40,7 @@ testRouter.get("/", (_req, res, next) => {
 testRouter.get("/:id", (req, res, next) => {
   const id = req.params.id;
   // idがないと弾く・文字列が来てもはじく処理をセキュリティ的に追加
-  if (!id || !Number(id)) throw badRequestException("idが必要です");
+  if (!id || !Number(id)) next(badRequestException("idが必要です"));
 
   const service = new TestService();
   service
@@ -59,7 +59,7 @@ testRouter.post("/", (req, res, next) => {
   const postData: testType = req.body as testType;
   // 型判定
   if (!isTestTypeOmitId(postData))
-    throw badRequestException("パラメータが不足しています");
+    next(badRequestException("パラメータが不足しています"));
 
   const service = new TestService();
   service
@@ -79,7 +79,7 @@ testRouter.put("/", (req, res, next) => {
   const postData: testType = req.body as testType;
   // 型判定
   if (!isTestType(postData))
-    throw badRequestException("パラメータが不足しています");
+    next(badRequestException("パラメータが不足しています"));
 
   const service = new TestService();
   service
@@ -95,7 +95,7 @@ testRouter.put("/", (req, res, next) => {
 testRouter.delete("/", (req, res, next) => {
   const id: number = (req.body as { id: number }).id;
   if (typeof id != "number")
-    throw badRequestException("許可されているのは数字のみです");
+    next(badRequestException("許可されているのは数字のみです"));
   const service = new TestService();
   service
     .deleteData(id)
