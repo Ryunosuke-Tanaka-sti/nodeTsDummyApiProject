@@ -7,6 +7,7 @@ import { errorHandler, notFoundException } from "./middleware/errorException";
 import { logMiddleware } from "./middleware/logMiddleware";
 
 import testRouter from "./routes/testRouter";
+import dummyRouter from "./routes/dummyRouter";
 
 const app = express();
 app.use(helmet());
@@ -26,6 +27,9 @@ app.use(logMiddleware);
 
 // 個別ルーティング設定
 app.use("/test", testRouter);
+
+// error用ルーティング
+app.use("/dummy", dummyRouter);
 
 // いずれのルーティングにもマッチしない(==NOT FOUND)
 app.use((_req, _res, next) => {

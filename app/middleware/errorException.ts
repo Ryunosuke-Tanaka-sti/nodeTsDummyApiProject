@@ -32,6 +32,9 @@ export const notAllowedMethodExveption = (
   return new HttpException(405, message);
 };
 
+export const serverError = (message = "500 server error"): HttpException => {
+  return new HttpException(500, message);
+};
 export const errorHandler = (
   err: HttpException,
   _req: Request,
